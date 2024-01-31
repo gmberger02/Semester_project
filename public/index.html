@@ -11,31 +11,51 @@
 <body>
 
     <div>
-        <label for="name">Navn:</label><br>
-        <input type="text" id="name" name="name"><br>
-        <label for="email">E-mail:</label><br>
-        <input type="text" id="email" name="email"><br>
-        <label for="pswHash">Passord:</label><br>
-        <input type="pswHash" id="pswHash" name="pswHash">
-        <Button type="Button" id="sumit" name="sumit"> Sumit</Button>
+        Name : <input type="text" id="name"><br>
+        Email: <input type="email" id="email"><br />
+        Password: <input type="password" id="pswHash"><br />
+        <button id="createUserButton">Create User</button>
     </div>
 
     <script>
 
-        async function postTo(url, data){
-            const header = {
-                metod: "POST",
-                header: {
-                    "Content-Type": "applicatiom/json",
-                },
-                body: JSON.stringify(data),
-            }
-            const respon = await fetch(url, header);
-            return respon;
+
+
+
+        const createUserButton = document.getElementById("createUserButton");
+
+        createUserButton.onclick = async function (e) {
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const pswHash = document.getElementById("pswHash").value;
+
+            const user = { name, email, pswHash };
+
+            const respon = await postTo("/user", user);
+
+
+
 
         }
 
+
+        async function postTo(url, data) {
+            const header = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+
+
+            const respon = await fetch(url, header);
+            return respon;
+        }
+
     </script>
+
 </body>
 
 </html>
