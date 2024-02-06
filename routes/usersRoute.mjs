@@ -12,11 +12,11 @@ USER_API.use(express.json); // This makes it so that express parses all incoming
 const users = [];
 
 
-USER_API.get('/:id', (req, res, next) => {
+USER_API.get('/:id',(req, res, next) => {
 
 
     SuperLogger.log("Trying to get a user with id " + req.params.id);
-    SuperLogger.log("Bananan is good ");
+    SuperLogger.log("Bananan is good "); 
 
     // Tip: All the information you need to get the id part of the request can be found in the documentation 
     // https://expressjs.com/en/guide/routing.html (Route parameters)
@@ -41,10 +41,14 @@ USER_API.post('/', (req, res, next) => {
         ///TODO: Do not save passwords.
         user.pswHash = password;
 
+
         ///TODO: Does the user exist?
         let exists = false;
 
         if (!exists) {
+
+
+            
             users.push(user);
             res.status(HTTPCodes.SuccesfullRespons.Ok).end();
         } else {
@@ -53,6 +57,16 @@ USER_API.post('/', (req, res, next) => {
 
     } else {
         res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("Mangler data felt").end();
+    }
+
+    ///TODO: Does the user exist?
+    let exists = false;
+
+    if (!exists) {
+        users.push(user);
+        res.status(HTTPCodes.SuccesfullRespons.Ok).end();
+    } else {
+        res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).end();
     }
 
 });

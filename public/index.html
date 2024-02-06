@@ -11,15 +11,13 @@
 <body>
 
     <div>
-        Name : <input type="text" id="name"><br>
-        Email: <input type="email" id="email"><br />
-        Password: <input type="password" id="pswHash"><br />
-        <button id="createUserButton">Create User</button>
+        Name: <br><input type="text" id="name"> <br />
+        Email: <br><input type="email" id="email"> <br />
+        Password: <br><input type="password" id="pswHash"> <br />
+        <br><button id="createUserButton">Create User</button>
     </div>
 
     <script>
-
-
 
 
         const createUserButton = document.getElementById("createUserButton");
@@ -33,9 +31,6 @@
             const user = { name, email, pswHash };
 
             const respon = await postTo("/user", user);
-
-
-
 
         }
 
