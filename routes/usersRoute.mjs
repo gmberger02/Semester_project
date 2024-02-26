@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import User from "../modules/user.mjs";
 import { HTTPCodes, HTTPMethods } from "../modules/httpConstants.mjs";
 import SuperLogger from "../modules/SuperLogger.mjs";
@@ -8,13 +8,22 @@ import SuperLogger from "../modules/SuperLogger.mjs";
 
 
 const USER_API = express.Router();
-USER_API.use(express.json); // This makes it so that express parses all incoming payloads as JSON for this route.
+USER_API.use(express.json()); // This makes it so that express parses all incoming payloads as JSON for this route.
+
+SuperLogger.log("A import msg", SuperLogger.LOGGING_LEVELS.CRTICAL);
+
+/* USER_API.get('/:id', (req, res, next) =>{
+    // Tip: All the information you need to get the id part of the request can be found in the documentation 
+    // Return user object
+})
+
+ */
 
 let users = [];
 
 try{
-    const data = fs.readFileSync('user.json', 'utf8');
-    users = JSON.parse(data);
+    //const data = fs.readFileSync('user.json', 'utf8');
+    //users = JSON.parse(data);
 }catch(err){
     console.error("Failed to read users from file, starting with emty array.", err);
 }

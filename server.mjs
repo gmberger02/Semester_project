@@ -1,7 +1,30 @@
+import 'dotenv/config'
 import express from 'express' // Express is installed using npm
 import USER_API from './routes/usersRoute.mjs'; // This is where we have defined the API for working with users.
 
 import SuperLogger from './modules/SuperLogger.mjs';
+
+
+//#region  Kun for rask testing, SLETT NÅR FERDIG Å TESTE
+
+
+    import DBManager from "./modules/storageManager.mjs"
+    await DBManager.test();
+
+    import User from "./modules/user.mjs";
+    let user = new User();
+    user.name = "Test"
+    user.email = "email";
+    user.pswHash = "psw";
+    user.yearOfBirth ="2006.08.04";
+    user.weight ="67,5";
+    user.height ="178,2";
+    
+    await user.save();
+    
+//#endregion
+
+
 // Creating an instance of the server
 const server = express();
 // Selecting a port for the server to use.
