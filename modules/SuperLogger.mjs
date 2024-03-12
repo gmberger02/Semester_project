@@ -98,7 +98,6 @@ class SuperLogger {
             // Finaly we parse our request on to the method that is going to writ the log msg.
             this.#LogHTTPRequest(req, res, next);
         }
-
     }
 
     #LogHTTPRequest(req, res, next) {

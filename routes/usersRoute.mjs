@@ -4,9 +4,6 @@ import { HTTPCodes, HTTPMethods } from "../modules/httpConstants.mjs";
 import SuperLogger from "../modules/SuperLogger.mjs";
 
 
-
-
-
 const USER_API = express.Router();
 USER_API.use(express.json()); // This makes it so that express parses all incoming payloads as JSON for this route.
 
@@ -19,7 +16,7 @@ SuperLogger.log("A import msg", SuperLogger.LOGGING_LEVELS.CRTICAL);
 
  */
 
-let users = [];
+let user = [];
 
 try{
     //const data = fs.readFileSync('user.json', 'utf8');
@@ -29,7 +26,7 @@ try{
 }
 
 function saveUsers(){
-    fs.writeFile('users.json', JSON.stringify(users), 'utf8', (err) =>{
+    fs.writeFile('users.json', JSON.stringify(user), 'utf8', (err) =>{
         if(err){
             console.error("Error writing users to file:", err);
             return res.status (HTTPCodes.ServerSideErrorrespons.InternalServererror).send("Failed to save user").end();
@@ -37,12 +34,12 @@ function saveUsers(){
     });
 }
 
-let lastID = users.length > 0 ? Math.max(...users.map(user => users.id)) : 0;
+let lastID = user.length > 0 ? Math.max(...user.map(user => user.userId)) : 0;
 
 
 USER_API.get('/:id',(req, res, next) => {
 
-    SuperLogger.log("Trying to get a user with id " + req.params.id);
+    SuperLogger.log("Trying to get a user with id " + req.params.userId);
     SuperLogger.log("a important msg", SuperLogger.LOGGING_LEVELS.DEBUG); 
 
     // Tip: All the information you need to get the id part of the request can be found in the documentation 
@@ -53,7 +50,7 @@ USER_API.get('/:id',(req, res, next) => {
 })
 
 USER_API.get('/:id',(req, res, next) => {
-    res.status(HTTPCodes.SuccesfullRespons.Ok).send(users).end();
+    res.status(HTTPCodes.SuccesfullRespons.Ok).send(user).end();
 
 })
 
@@ -68,11 +65,11 @@ USER_API.post('/', (req, res, next) => {
         const user = new User();
         user.name = name;
         user.email = email;
-        console.log(users)
+        console.log(user)
 
         ///TODO: Do not save passwords.
         user.pswHash = password;
-        const exists = users.some(user => user.email === email);
+        const exists = user.some(user => user.email === email);
 
 
         ///TODO: Does the user exist?
@@ -82,7 +79,7 @@ USER_API.post('/', (req, res, next) => {
             const user = { id, name, email, password };
 
 
-            users.push(user);
+            user.push(user);
             saveUsers();
 
             res.status(HTTPCodes.SuccesfullRespons.Ok).end();
@@ -98,7 +95,7 @@ USER_API.post('/', (req, res, next) => {
     let exists = false;
 
     if (!exists) {
-        users.push(user);
+        user.push(user);
         res.status(HTTPCodes.SuccesfullRespons.Ok).end();
     } else {
         res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).end();
@@ -111,12 +108,12 @@ USER_API.put('/:id', (req, res) => {
     const userId = parseInt(req.params.id, 10);
     const { name, email, password } = req.body;
 
-    const userIndex = users.findIndex(user => user.id === userId);
+    const userIndex = user.findIndex(user => user.id === userId);
 
     if (userIndex !== -1) {
 
-        users[userIndex].name = name !== undefined ? name : users[userIndex].name;
-        users[userIndex].email = email !== undefined ? email : users[userIndex].email;
+        user[userIndex].name = name !== undefined ? name : user[userIndex].name;
+        user[userIndex].email = email !== undefined ? email : user[userIndex].email;
 
         saveUsers();
 
@@ -130,10 +127,10 @@ USER_API.delete('/:id', (req, res) => {
     /// TODO: Delete user.
    const userId = parseInt(req.params.id, 10);
 
-   const userIndex = users.findIndex(user => user.id === userId);
+   const userIndex = user.findIndex(user => user.id === userId);
 
    if (userIndex !== -1) {
-    users.splice(userIndex, 1);
+    user.splice(userIndex, 1);
 
     saveUsers();
 

@@ -16,9 +16,9 @@ import SuperLogger from './modules/SuperLogger.mjs';
     user.name = "Test"
     user.email = "email";
     user.pswHash = "psw";
-    user.yearOfBirth ="2006.08.04";
-    user.weight ="67,5";
-    user.height ="178,2";
+    user.yearOfBirth = 2006;
+    user.weight = 67,5;
+    user.height = 178,2;
     
     await user.save();
     
@@ -30,6 +30,7 @@ const server = express();
 // Selecting a port for the server to use.
 const port = (process.env.PORT || 8080);
 server.set('port', port);
+server.use(express.json());
 
 // Enable logging for server
 const logger = new SuperLogger();
@@ -41,6 +42,26 @@ server.use(express.static('public'));
 
 // Telling the server to use the USER_API (all urls that uses this code will have to have the /user after the base address)
 server.use("/user", USER_API);
+
+server.post("/createUser", (req,res, next) => {
+    console.log(req.body);
+    if(DBManager.createUser(req.body.email, req.body.pswd, req.body.name, req.body.yearOfBirth, req.body.weight, req.body.height) === true){
+        res.status(200).send(JSON.stringify({msg: "User is created"}));
+    }else{
+        res.status(404).send(JSON.stringify({msg: "Could not create user"}));
+    }
+    next();
+});
+
+server.post("/login", (req, res, next) => {
+    console.log(req.body);
+    if(DBManager.login(req.body.email, req.body.pswd) === true){
+        res.status(200).send(JSON.stringify({msg: "User is loged in"}));
+    }else{
+        res.status(404).send(JSON.stringify({msg: "Password or email not correct"}));
+    }
+    next();
+});
 
 // A get request handler example)
 server.get("/", (req, res, next) => {

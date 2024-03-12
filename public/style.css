@@ -139,12 +139,12 @@ body {
     border-radius: 5px;
     outline: none;
     cursor: pointer;
-    background: none; 
+    background: none;
     
 }
 
 .arrow_button{
-    bottom: 5%;
+    bottom: 50%;
     right: 10px;
     position: absolute;
     width: fit-content;
