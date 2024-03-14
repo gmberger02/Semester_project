@@ -10,6 +10,7 @@ class User {
         this.weight;
         this.height;
     }
+
     async save() {
         //TODO: What happens if the DBManager fails to complete its task?
     // We know that if a user object dos not have the ID, then it cant be in the DB.
@@ -17,13 +18,25 @@ class User {
     if (this.userId == null) {
         return await DBManager.createUser(this);
     }else{
-        return await DBManager.upgardeUser(this);
+        return await DBManager.updateUser(this);
     } 
     }
 
-    delete() {
+    async delete() {
         //TODO: What happens if the DBManager fails to complete its task?
-        DBManager.deleteUser(this); 
+        await DBManager.deleteUser(this); 
+    }
+
+    async exsists(){
+        let user = await DBManager.login(this.email, this.pswHash);
+        if(user){
+            this.userId = user.id;
+            this.name = user.name;
+            this.yearOfBirth = user.yearOfBirth;
+            this.weight = user.weight;
+            this.height = user.height;
+        }
+        return user;
     }
 }
 

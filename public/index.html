@@ -13,80 +13,81 @@
 <body>
     <div class="container" id="divLogin">
 
-        <form class="form" onsubmit="return loginSubmit()">
+        <form class="form">
             <h1 class="form__title">Login</h1>
-            <div class="form__message form__message--error"></div>
             <div class="form__input-group">
-                <input type="text" class="form__input" autofocus placeholder="Email">
+                <input type="text" class="form__input" id="loginEmail" autofocus placeholder="Email">
                 <div class="form__input-error-message"></div>
             </div>
             <div class="form__input-group">
-                <input type="password" class="form__input" autofocus placeholder="Password">
+                <input type="password" class="form__input" id="loginPassword" autofocus placeholder="Password">
                 <div class="form__input-error-message"></div>
             </div>
             <p class="form" id="continueButton">
-                <a class="form__link" href="./" id="linkContinueButton">
-                    <button class="form__button" type="submit">Submit</button>
+                <a class="form__link" href="./" id="loginButton">
+                    <button class="form__button" type="button">Submit</button>
                 </a>
             </p>
             <p class="form__text">
                 <a href="#" class="form__link">Forgot your password?</a>
             </p>
             <p class="form__text" id="continueButton">
-                <a class="form__link" href="./" id="    ">Don't have an account? Create account</a>
+                <a class="form__link" href="./" id="createAccountLink">Don't have an account? Create account</a>
             </p>
+            <div id="loginMessage" style="display: none;">
+                <span>"Brukernavn eller passord er feil"</span>
+            </div>
         </form>
     </div>
     <!-- Dette lager create account form -->
-    <div class="container" id="divCreateUser" style="display: block;" >
+    <div class="container" id="divCreateUser" style="display: block;">
 
-    <form class="form" onsubmit="return createUserButton()" >
-        <h1 class="form__title">Create Account</h1>
-        <div class="form__message form__message--error"></div>
-        <div class="form__input-group">
-            <input type="text" id="signupUsername" class="form__input" autofocus placeholder="Name">
-            <div class="form__input-error-message"></div>
-        </div>
-        <div class="form__input-group">
-            <input type="text" class="form__input" autofocus placeholder="Email Address">
-            <div class="form__input-error-message"></div>
-        </div>
-        <div class="form__input-group">
-            <input type="text" class="form__input" autofocus placeholder="Year of birth">
-            <div class="form__input-error-message"></div>
-        </div>
-        <div class="form__input-group">
-            <input type="text" class="form__input" autofocus placeholder="Height">
-            <div class="form__input-error-message"></div>
-        </div>
-        <div class="form__input-group">
-            <input type="text" class="form__input" autofocus placeholder="Weight">
-            <div class="form__input-error-message"></div>
-        </div>
-        <div class="form__input-group">
-            <input type="password" class="form__input" autofocus placeholder="Password">
-            <div class="form__input-error-message"></div>
-        </div>
-       
+        <form class="form">
+            <h1 class="form__title">Create Account</h1>
+            <div class="form__input-group">
+                <input type="text" id="signupUsername" class="form__input" id="name" autofocus placeholder="Name">
+                <div class="form__input-error-message"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="text" class="form__input" id="email" autofocus placeholder="Email Address">
+                <div class="form__input-error-message"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="text" class="form__input" id="yearOfBirth" autofocus placeholder="Year of birth">
+                <div class="form__input-error-message"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="text" class="form__input" id="height" autofocus placeholder="Height">
+                <div class="form__input-error-message"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="text" class="form__input" id="weight" autofocus placeholder="Weight">
+                <div class="form__input-error-message"></div>
+            </div>
+            <div class="form__input-group">
+                <input type="password" class="form__input" id="pswHash" autofocus placeholder="Password">
+                <div class="form__input-error-message"></div>
+            </div>
 
 
-        <!-- Denne lager continue knappen som linker select exercise -->
-        <p class="form" id="createUserButton">
-            <a class="form__link" href="./" >
-                <button class="form__button" type="submit">Submit</button>
-            </a>
-        </p>
-   
-        <p class="form__text">
-            <a class="form__link" href="./" id="linkLogin">Already have an account? Sign in</a>
-        </p>
 
-    </form>
-</div>
-</div>
+            <!-- Denne lager continue knappen som linker select exercise -->
+            <p class="form" id="createUserButton">
+                <a class="form__link" href="./">
+                    <button class="form__button" type="button">Submit</button>
+                </a>
+            </p>
 
-    
-    <div class="home_button">
+            <p class="form__text">
+                <a class="form__link" href="./" id="linkLogin">Already have an account? Sign in</a>
+            </p>
+
+        </form>
+    </div>
+    </div>
+
+
+    <div class="home_button" id="homeButton" style="display: none;">
         <a href="./">
             <button class="home_button" type="button">
                 <img class="home_picture" src="/1228447-200.png" alt="">
@@ -96,35 +97,35 @@
     </div>
 
     <!-- Dette lager alle exercise knappene -->
-    <div class="container" id="selecteYourExercise" style="display: none; ">
+    <div class="container" id="selecteYourExercise" style="display: block; ">
         <div class="form form_exercise" id="selectExerciseLegs">
-            <a id="linkSelectExerciseLegs" href="./">
+            <a id="legsExercises" href="./">
                 <button class="form__button-exercise" type="button">Legs</button>
             </a>
         </div>
         <br>
         <div class="form form_exercise" id="selectExerciseCore">
-            <a id="linkSelectExerciseCore" href="./">
+            <a id="coreExercises" href="./">
                 <button class="form__button-exercise" type="button">Core</button>
             </a>
         </div>
         <br>
         <div class="form form_exercise" id="selectExercisePull">
-            <a id="linkSelectExercisePull" href="./">
+            <a id="pullExercises" href="./">
                 <button class="form__button-exercise" type="button">Pull</button>
             </a>
         </div>
         <br>
         <div class="form form_exercise" id="selectExercisePush">
-            <a id="linkSelectExercisePush" href="./">
+            <a id="pushExercises" href="./">
                 <button class="form__button-exercise" type="button">Push</button>
             </a>
         </div>
     </div>
 
-    <div class="selectedExersices">
+    <div class="selectedExersices" style="display: block;">
         <!-- Liste øvelser for legs øvelser-->
-        <div class="form form--hidden" id="selectedLegs" >
+        <div class="form form--hidden" id="selectedLegs" style="display: block;">
             <h1 class="form__title">Leg exercises</h1>
             <h3>Squats:</h3>
             <p>3 sets of 8-10 reps</p>
@@ -145,7 +146,7 @@
 
 
         <!-- Liste over core øvelser -->
-        <div class="form form--hidden" id="selectedCore">
+        <div class="form form--hidden" id="selectedCore" style="display: block;">
             <h1 class="form__title">Core exercises</h1>
             <h3>Plank:</h3>
             <p>3 sets, hold for 30-60 seconds each</p>
@@ -161,11 +162,11 @@
 
             <h3>Mountain Climbers:</h3>
             <p>3 sets of 20 reps per leg</p>
-            
+
         </div>
 
         <!-- Liste for pull øvelser -->
-        <div class="form form--hidden" id="selectedPull">
+        <div class="form form--hidden" id="selectedPull" style="display: block;">
             <h1 class="form__title">Pull exercises</h1>
             <h3>Deadlifts:</h3>
             <p>3 sets of 6-8 reps</p>
@@ -185,7 +186,7 @@
         </div>
 
         <!-- Liste for Push øvelser -->
-        <div class="form form--hidden" id="selectedPush">
+        <div class="form form--hidden" id="selectedPush" style="display: block;">
             <h1 class="form__title">Push exercises</h1>
             <h3>Bench Press:</h3>
             <p>3 sets of 8-10 reps</p>
@@ -204,73 +205,163 @@
         </div>
     </div>
 
-    
-
-
 
     <script>
 
-        async function postData(url = "", data = {}) {
-            // Default options are marked with *
-            const response = await fetch(url, {
-                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                headers: {
-                    "Content-Type": "application/json",
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: JSON.stringify(data), // body data type must match "Content-Type" header
-            });
-            return await response.json(); // parses JSON response into native JavaScript objects
+        /* gjemmer det som ikke er i bruk. Log inn og create user. */
+        function toggleForms(formeName) {
+            const loginForm = document.getElementById("divLogin");
+            const createUserForm = document.getElementById("divCreateUser");
+            const selecteYourExercise = document.getElementById("selecteYourExercise");
+            const selectedLegs = document.getElementById("selectedLegs");
+            const selectedCore = document.getElementById("selectedCore");
+            const selectedPull = document.getElementById("selectedPull");
+            const selectedPush = document.getElementById("selectedPush");
+
+            switch (formeName) {
+                case "login":
+                    loginForm.style.display = "block";
+                    createUserForm.style.display = "none";
+                    selecteYourExercise.style.display = "none";
+                    selectedLegs.style.display = "none";
+                    selectedCore.style.display = "none";
+                    selectedPull.style.display = "none";
+                    selectedPush.style.display = "none";
+                    break;
+                case "createUser":
+                    loginForm.style.display = "none";
+                    createUserForm.style.display = "block";
+                    selecteYourExercise.style.display = "none";
+                    selectedLegs.style.display = "none";
+                    selectedCore.style.display = "none";
+                    selectedPull.style.display = "none";
+                    selectedPush.style.display = "none";
+                    break;
+                case "exercise":
+                    loginForm.style.display = "none";
+                    createUserForm.style.display = "none";
+                    selecteYourExercise.style.display = "block";
+                    selectedLegs.style.display = "none";
+                    selectedCore.style.display = "none";
+                    selectedPull.style.display = "none";
+                    selectedPush.style.display = "none";
+                    break;
+                case "legs":
+                    loginForm.style.display = "none";
+                    createUserForm.style.display = "none";
+                    selecteYourExercise.style.display = "none";
+                    selectedLegs.style.display = "block";
+                    selectedCore.style.display = "none";
+                    selectedPull.style.display = "none";
+                    selectedPush.style.display = "none";
+                    break;
+                case "core":
+                    loginForm.style.display = "none";
+                    createUserForm.style.display = "none";
+                    selecteYourExercise.style.display = "none";
+                    selectedLegs.style.display = "none";
+                    selectedCore.style.display = "block";
+                    selectedPull.style.display = "none";
+                    selectedPush.style.display = "none";
+                    break;
+                case "pull":
+                    loginForm.style.display = "none";
+                    createUserForm.style.display = "none";
+                    selecteYourExercise.style.display = "none";
+                    selectedLegs.style.display = "none";
+                    selectedCore.style.display = "none";
+                    selectedPull.style.display = "block";
+                    selectedPush.style.display = "none";
+                    break;
+                case "push":
+                    loginForm.style.display = "none";
+                    createUserForm.style.display = "none";
+                    selecteYourExercise.style.display = "none";
+                    selectedLegs.style.display = "none";
+                    selectedCore.style.display = "none";
+                    selectedPull.style.display = "none";
+                    selectedPush.style.display = "block";
+                    break;
+            }
+
         }
 
+        // Call toggleForms with showLogin set to true initially
+        toggleForms("login");
 
-        function loginSubmit() {
+        // Event listener for "Don't have an account? Create account" link
+        const createAccountLink = document.getElementById("createAccountLink");
+        createAccountLink.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent the default link behavior
+            toggleForms("createUser"); // Show create user form, hide login form
+        });
 
-            const resp = postData("/login", { email: "test@teet.no", pswHash: "123" });
-            resp.then((data) => {
-                console.log(data);
-                const frmLogin = document.getElementById("divLogin");
-                frmLogin.style.display = "none";
-            });
-
-
-            return false;
-
-        }
-
-        const frmSelectExercise = document.getElementById('selecteYourExercise')
-
-        function createUserButton() {
-            const resp = postData("/createUser", {name: "Ola Nordmann", email: "test@teet.no",  yearOfBirth: "2006", height: "167", weight: "67", pswHash: "123"});
-            resp.then((data) =>{
-                console.log(data);
-                const frmCreateUser = document.getElementById("divCreateUser")
-            });
-
-            return false;
-        }
-
-        function selectYourExersice(){
-
-        }
-
+        /* Client siden til createUser */
         /* legger til en eventlytter til createuserbutton som lytter etter klikk. */
-        /* const createUserButton = document.getElementById("createUserButton").addEventListener("click");
+        const createUserButton = document.getElementById("createUserButton");
+        createUserButton.addEventListener("click", async function (e) {
 
-        createUserButton.onclick = async function (e) {
+            e.preventDefault();
 
-            const name = document.getElementById("name").value;
+            const name = document.getElementById("signupUsername").value;
             const email = document.getElementById("email").value;
             const pswHash = document.getElementById("pswHash").value;
+            const yearOfBirth = document.getElementById("yearOfBirth").value;
+            const weight = document.getElementById("weight").value;
+            const height = document.getElementById("height").value;
 
-            const user = { name, email, pswHash };
+            const user = { name, email, pswHash, yearOfBirth, weight, height };
 
-            const respon = await postTo("/user", user);
+            const respon = await postTo("/user/createUser", user);
 
+            return false;
+        });
 
-        }
+        /* Client siden til login */
+        /* legger til en eventlytter til loginButton lytter etter klikk */
+        const loginButton = document.getElementById("loginButton");
+        loginButton.addEventListener("click", async function (e) {
 
-        function postTo(url, data) {
+            e.preventDefault();
+
+            const email = document.getElementById("loginEmail").value;
+            const pswHash = document.getElementById("loginPassword").value;
+
+            const user = { email, pswHash };
+            loginMessage = document.getElementById("loginMessage");
+            loginMessage.style.display = "none";
+
+            const respon = await postTo("/user/login", user);
+            if (respon) {
+                toggleForms("exercise");
+            } else {
+                loginMessage = document.getElementById("loginMessage");
+                loginMessage.style.display = "block";
+            }
+
+            return false;
+        });
+
+        /* Client siden til selectYourExercise */
+        const selecteYourExercise = document.getElementById("selecteYourExercise");
+        selecteYourExercise.addEventListener("click", async function (e) {
+
+            const legs = document.getElementById("legsExercises").value;
+          /*   const core = document.getElementById("coreExercises").value;
+            const pull = document.getElementById("pullExercises").value;
+            const push = document.getElementById("pushExercises").value; */
+
+            const exercise = { legs, /* core, pull, push */ };
+
+            const respon = await postTo("/exercise/selectYourExercise", exercise);
+           if(respon){
+            toggleForms("legs");
+           } 
+
+            return false;
+        });
+
+        async function postTo(url, data) {
             const header = {
                 method: "POST",
                 headers: {
@@ -280,83 +371,14 @@
             };
 
 
-            const respon = fetch(url, header);
-            return respon;
-        } */
+            const respon = await fetch(url, header);
+            if (respon.status === 200) {
+                return await respon.json();
+            }
+            return null;
 
+        }
 
-        /* document.addEventListener("DOMContentLoaded", () => {
-            const buttonsForRegistration = [
-                { buttonLink: "#linkLogin", selectEventId: "#login", formId: "#selecteYouExercise" },
-                { buttonLink: "#linkCreateAccount", selectEventId: "#createAccount", formId: "#selecteYouExercise" },
-                { buttonLink: "#linkContinueButton", selectEventId: "#continueButton", formId: "#selecteYouExercise" },
-            ]
-
-            buttonsForRegistration.forEach(registration => {
-                // Henter referanser til kanppene, valgav øvelser og viser listen for de valgte øvelsene
-                const button = document.querySelector(buttonsForRegistration.buttonLink);
-                const selectEventId = document.querySelector(buttonsForRegistration.selectEventId);
-                const selectRegistrationForm = document.querySelector(buttonsForRegistration.formId);
-
-                button.addEventListener("click", e => {
-                    e.preventDefault(); // forhinderer standarhandlingen for klikk på en lenke/knapp
-
-                    //Skjuler kanppene og lister for andre øvelser utenom den som brukeren har valgt
-                    buttonsForRegistration.forEach(otherRegistration => {
-                        if (otherRegistration !== registration) {
-                            const otherSelectEventId = document.querySelector(otherRegistration.selectEventId);
-                            const otherSelectForm = document.querySelector(otherRegistration.formId);
-                            otherSelectEventId.classList.add("form--hidden");
-                            otherSelectForm.classList.add("form--hidden");
-                        }
-                    });
-                    //Viser valg det brukeren valgte av øvelse og liste for øvelse
-                    selectEventId.classList.add("form--hidden"); // Skjul valg av øvelses-skjema
-                    selectRegistrationForm.classList.remove("form--hidden"); // Viser øvelses-skjema
-                });
-            }) */
-
-
-            /* dette er bare en test for å se om vi får fjerna eller gjemt */
-            /* denne styrere legs knappen */
-            /* dette gjør det mulig at select excersise knappene blir gjemt og de valgte øvelsene blir vist. */
-
-            /* document.addEventListener("DOMContentLoaded", () => {//legger til en event lytter til DOMContentLoaded
-                //Definerer et array av objekter, hver representerer en øvelsesknapp, valg av øvelser og en liste over de valgte øvelsene.
-                const exercises = [
-                    { buttonId: "#linkSelectExerciseLegs", selectExerciseId: "#selectExerciseLegs", exerciseFormId: "#selectedLegs" },
-                    { buttonId: "#linkSelectExerciseCore", selectExerciseId: "#selectExerciseCore", exerciseFormId: "#selectedCore" },
-                    { buttonId: "#linkSelectExercisePull", selectExerciseId: "#selectExercisePull", exerciseFormId: "#selectedPull" },
-                    { buttonId: "#linkSelectExercisePush", selectExerciseId: "#selectExercisePush", exerciseFormId: "#selectedPush" }
-                ];
-
-                //Går gjennom hvert øvelses ovjekt i exercises-arryet
-                exercises.forEach(exercise => {
-                    // Henter referanser til kanppene, valgav øvelser og viser listen for de valgte øvelsene
-                    const button = document.querySelector(exercise.buttonId);
-                    const selectExercise = document.querySelector(exercise.selectExerciseId);
-                    const exerciseForm = document.querySelector(exercise.exerciseFormId);
-
-                    //Legger til en klikk-lytter til kanppen.
-                    button.addEventListener("click", e => {
-                        e.preventDefault(); // forhinderer standarhandlingen for klikk på en lenke/knapp
-
-                        //Skjuler kanppene og lister for andre øvelser utenom den som brukeren har valgt
-                        exercises.forEach(otherExercise => {
-                            if (otherExercise !== exercise) {
-                                const otherSelectExercise = document.querySelector(otherExercise.selectExerciseId);
-                                const otherExerciseForm = document.querySelector(otherExercise.exerciseFormId);
-                                otherSelectExercise.classList.add("form--hidden");
-                                otherExerciseForm.classList.add("form--hidden");
-                            }
-                        });
-                        //Viser valg det brukeren valgte av øvelse og liste for øvelse
-                        selectExercise.classList.add("form--hidden"); // Skjul valg av øvelses-skjema
-                        exerciseForm.classList.remove("form--hidden"); // Viser øvelses-skjema
-                    });
-                });
-            });
-        }); */
     </script>
 
 </body>

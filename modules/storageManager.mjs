@@ -1,5 +1,6 @@
 import pg from "pg"
 import SuperLogger from "./SuperLogger.mjs"
+import { HTTPCodes } from "./httpConstants.mjs";
 
 //We are using an enviorment varible to get the db credential
 if (process.env.DB_CONNECTIONSTRING == undefined) {
@@ -18,24 +19,24 @@ class DBManager {
         };
     }
 
-    async login(email, pswHash){
+    async login(email, pswHash) {
         const client = new pg.Client(this.#credentials);
         await client.connect();
-        const sql = "SELECT FROM User WHERE email = $1 AND pswHash = $2";
+        const sql = 'SELECT * FROM "public"."User" WHERE email = $1 AND password = $2';
         const params = [email, pswHash];
         const output = await client.query(sql, params);
-        if(output.rows.length === 1){
-            return true;
-        }
-        return false;
+        if (output.rows.length === 1) {
+            return output.rows[0];
+        } 
+        return null;
     }
-
-    async test() {
+/* HUSK Å FJERNE TEST FØR INNLEVREING  */
+   /*  async test() {
         const client = new pg.Client(this.#credentials);
         await client.connect();
         await client.end();
         console.log("DATABASE TEST VIRKET");
-    }
+    } */
 
     async updateUser(user) {
 
@@ -50,14 +51,14 @@ class DBManager {
             // Of special intrest is the rows and rowCount properties of this object.
 
             //TODO Did we update the user?
-            if (output.rowCount > 0){
+            if (output.rowCount > 0) {
                 SuperLogger.log("User updated successfully",
-            SuperLogger.LOGGING_LEVELS.INFO);
-            }else{
+                    SuperLogger.LOGGING_LEVELS.INFO);
+            } else {
                 SuperLogger.log("User update failed",
-            SuperLogger.LOGGING_LEVELS.ERROR);
+                    SuperLogger.LOGGING_LEVELS.ERROR);
             }
-        
+
 
         } catch (error) {
             //TODO : Error handling?? Remember that this is a module seperate from your server 
@@ -76,17 +77,17 @@ class DBManager {
         try {
             await client.connect();
             const output = await client.query('Delete from "public"."Users" where id = $1;', [user.userId]);
-            
+
             // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
             // Of special intrest is the rows and rowCount properties of this object.
 
             //TODO: Did the user get deleted?
             if (output.rowCount > 0) {
-                SuperLogger.log("User deleted successfully", 
-            SuperLogger.LOGGING_LEVELS.INFO);
-            }else{
+                SuperLogger.log("User deleted successfully",
+                    SuperLogger.LOGGING_LEVELS.INFO);
+            } else {
                 SuperLogger.log("Could not delete user",
-            SuperLogger.LOGGING_LEVELS.ERROR);
+                    SuperLogger.LOGGING_LEVELS.ERROR);
             }
         } catch (error) {
             //TODO : Error handling?? Remember that this is a module seperate from you server
@@ -103,7 +104,7 @@ class DBManager {
     async createUser(user) {
 
         const client = new pg.Client(this.#credentials);
-   
+
         try {
             await client.connect();
             const output = await client.query('INSERT INTO "public"."User"("name", "email", "password", "yearOfBirth", "weight", "height" ) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;', [user.name, user.email, user.pswHash, user.yeareOfirth, user.weight, user.height]);
@@ -113,10 +114,10 @@ class DBManager {
 
             if (output.rows.length == 1) {
                 //We stored the user in the DB.
-                user.userId = output.rows[0].userId;
+                user.userId = output.rows[0].id;
             }
         } catch (error) {
-            console.error ("error creating user", error);
+            console.error("error creating user", error);
             //TODO : Error handling?? Remember that this is a module seperate from your server
         } finally {
             client.end(); // Always disconnect from the database
@@ -124,6 +125,57 @@ class DBManager {
 
         return user;
     }
+
+    /* For selectYourExercise */
+
+    async selectYourExercise(exercise){
+        const client = new pg.Client(this.#credentials);
+
+        try {
+            await client.connect();
+            const output = await client.query('INSERT INTO "public"."Exercise"("legs", "pull", "push", "core" ) VALUES($1, $2, $3, $4) RETURNING id;', [exercise.legs, exercise.pull, exercise.push, exercise.core]);
+
+            // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
+            // Of special intrest is the rows and rowCount properties of this object.
+
+            if (output.rows.length == 1) {
+                //We stored the user in the DB.
+                exercise.exerciseId = output.rows[0].id;
+            }
+        } catch (error) {
+            console.error("error creating user", error);
+            //TODO : Error handling?? Remember that this is a module seperate from your server
+        } finally {
+            client.end(); // Always disconnect from the database
+        }
+
+        return exercise;
+    }
+
+    async updateYourExercise(exercise) {
+
+        const client = new pg.Client(this.#credentials);
+
+        try {
+            await client.connect();
+            const output = await client.query('Update "public"."Exercise" set "legs" = $1, "pull" = $2, "push" = $3 where id = $4 "core" = $5 ', [exercise.legs, exercise.pull, exercise.push, exercise.exerciseIdId, exercise.core]);
+
+            // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
+            // Of special intrest is the rows and rowCount properties of this object.
+
+            //TODO Did we update the user?
+            if (output.rowCount > 0) {
+                
+            }
+
+        } catch (error) {
+            //TODO : Error handling?? Remember that this is a module seperate from your server 
+            console.error('Error updating user:', error);
+        } finally {
+            client.end(); // Always disconnect from the database.
+        }
+        return exercise;
+
+    }
 }
- 
 export default new DBManager(process.env.DB_CONNECTIONSTRING); 

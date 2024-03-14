@@ -8,7 +8,7 @@ import SuperLogger from './modules/SuperLogger.mjs';
 //#region  Kun for rask testing, SLETT NÅR FERDIG Å TESTE
 
 
-    import DBManager from "./modules/storageManager.mjs"
+   /*  import DBManager from "./modules/storageManager.mjs"
     await DBManager.test();
 
     import User from "./modules/user.mjs";
@@ -17,10 +17,10 @@ import SuperLogger from './modules/SuperLogger.mjs';
     user.email = "email";
     user.pswHash = "psw";
     user.yearOfBirth = 2006;
-    user.weight = 67,5;
-    user.height = 178,2;
+    user.weight = 67;
+    user.height = 178;
     
-    await user.save();
+    await user.save(); */
     
 //#endregion
 

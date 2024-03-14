@@ -54,35 +54,27 @@ USER_API.get('/:id',(req, res, next) => {
 
 })
 
-USER_API.post('/', (req, res, next) => {
+USER_API.post('/createUser', async(req, res) => {
 
     // This is using javascript object destructuring.
     // Recomend reading up https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
-    // https://www.freecodecamp.org/news/javascript-object-destructuring-spread-operator-rest-parameter/
-    const { name, email, password } = req.body;
+    // https://www.freecodecamp.org/news/javascript-object-destructuring-spread-operator-rest-parameter/    
 
-    if (name != "" && email != "" && password != "") {
+const { name, email, pswHash, yearOfBirth, weight, height } = req.body;
+    if (name != "" && email != "" && yearOfBirth != "" && weight != "" && height != "" && pswHash != "") {
+        
         const user = new User();
         user.name = name;
         user.email = email;
+        user.yearOfBirth = yearOfBirth;
+        user.weight = weight;
+        user.height = height;
+        user.pswHash = pswHash;///TODO: Do not save passwords.
         console.log(user)
-
-        ///TODO: Do not save passwords.
-        user.pswHash = password;
-        const exists = user.some(user => user.email === email);
-
-
-        ///TODO: Does the user exist?
     
-        if (!exists) {
-            const id = ++lastId;
-            const user = { id, name, email, password };
-
-
-            user.push(user);
-            saveUsers();
-
-            res.status(HTTPCodes.SuccesfullRespons.Ok).end();
+        if ((await user.exsists()) == false) {
+            await user.save();
+            res.status(HTTPCodes.SuccesfullRespons.Ok).send("User was created").end();
         } else {
             res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).end();
         }
@@ -115,7 +107,7 @@ USER_API.put('/:id', (req, res) => {
         user[userIndex].name = name !== undefined ? name : user[userIndex].name;
         user[userIndex].email = email !== undefined ? email : user[userIndex].email;
 
-        saveUsers();
+        user.save();
 
         res.status(HTTPCodes.SuccesfullRespons.Ok).send("User updated successfully!").end();    
     }else{
@@ -132,12 +124,35 @@ USER_API.delete('/:id', (req, res) => {
    if (userIndex !== -1) {
     user.splice(userIndex, 1);
 
-    saveUsers();
+    user.save();
 
     res.status(HTTPCodes.SuccesfullRespons.Ok).send("User deleted successfully!").end();
    }else{
     res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("User not found!").end();
    }
+});
+
+USER_API.post('/login', async (req, res, next) => {
+
+    // This is using javascript object destructuring.
+    // Recomend reading up https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
+    // https://www.freecodecamp.org/news/javascript-object-destructuring-spread-operator-rest-parameter/
+    const {email, pswHash } = req.body;
+
+    if (email != "" && pswHash != "") {
+        let user = new User();
+        user.email = email;
+        ///TODO: Do not save passwords.
+        user.pswHash = pswHash;
+        user = await user.exsists();
+        if(user){
+            console.log(user);
+            res.status(HTTPCodes.SuccesfullRespons.Ok).send(JSON.stringify(user)).end();
+            return;
+        }
+    }
+      res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("Mangler data felt").end();
+
 });
 
 export default USER_API
