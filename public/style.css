@@ -143,9 +143,17 @@ body {
     
 }
 
-.arrow_button{
-    bottom: 50%;
-    right: 10px;
+.return_button{
+    bottom: 5%;
+    right: 200px;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+}
+
+.calender_button{
+    bottom: 5%;
+    right: 500px;
     position: absolute;
     width: fit-content;
     height: fit-content;

@@ -87,12 +87,27 @@
     </div>
 
 
-    <div class="home_button" id="homeButton" style="display: none;">
+    <!-- <div class="home_button" >
         <a href="./">
-            <button class="home_button" type="button">
+            <button class="home_button" type="button" id="homeButton" style="display: block;">
                 <img class="home_picture" src="/1228447-200.png" alt="">
             </button>
 
+        </a>
+    </div> -->
+    <div class="return_button" id="returnButton" style="display: block;">
+        <a href="./">
+            <button class="return_button" type="button" id="returnButton" style="display: block;">
+                <img class="home_picture" src="/return_arrow.png" alt="">
+            </button>
+        </a>
+    </div>
+
+    <div class="calender_button" id="calenderButton" style="display: block;">
+        <a href="./">
+            <button class="calender_button" type="button" id="calenderButton" style="display: block;">
+                <img class="home_picture" src="/calendar_button.png" alt="">
+            </button>
         </a>
     </div>
 
@@ -100,25 +115,25 @@
     <div class="container" id="selecteYourExercise" style="display: block; ">
         <div class="form form_exercise" id="selectExerciseLegs">
             <a id="legsExercises" href="./">
-                <button class="form__button-exercise" type="button">Legs</button>
+                <button class="form__button-exercise" type="button" id="legsButton">Legs</button>
             </a>
         </div>
         <br>
         <div class="form form_exercise" id="selectExerciseCore">
             <a id="coreExercises" href="./">
-                <button class="form__button-exercise" type="button">Core</button>
+                <button class="form__button-exercise" type="button" id="coreButton">Core</button>
             </a>
         </div>
         <br>
         <div class="form form_exercise" id="selectExercisePull">
             <a id="pullExercises" href="./">
-                <button class="form__button-exercise" type="button">Pull</button>
+                <button class="form__button-exercise" type="button" id="pullButton">Pull</button>
             </a>
         </div>
         <br>
         <div class="form form_exercise" id="selectExercisePush">
             <a id="pushExercises" href="./">
-                <button class="form__button-exercise" type="button">Push</button>
+                <button class="form__button-exercise" type="button" id="pushButton">Push</button>
             </a>
         </div>
     </div>
@@ -205,6 +220,23 @@
         </div>
     </div>
 
+    <!-- For å lage en log -->
+
+    <table id="exerciseLogsTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Exercise Name</th>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Weight</th>
+                <th>Duration (min)</th>
+            </tr>
+        </thead>
+        <tbody id="exerciseLogsBody">
+            <!-- Exercise logs will be dynamically inserted here -->
+        </tbody>
+    </table>
 
     <script>
 
@@ -217,6 +249,8 @@
             const selectedCore = document.getElementById("selectedCore");
             const selectedPull = document.getElementById("selectedPull");
             const selectedPush = document.getElementById("selectedPush");
+            const returnButton = document.getElementById("returnButton");
+            const calenderButton = document.getElementById("calenderButton");
 
             switch (formeName) {
                 case "login":
@@ -227,6 +261,8 @@
                     selectedCore.style.display = "none";
                     selectedPull.style.display = "none";
                     selectedPush.style.display = "none";
+                    returnButton.style.display = "none";
+                    calenderButton.style.display = "none";
                     break;
                 case "createUser":
                     loginForm.style.display = "none";
@@ -236,6 +272,8 @@
                     selectedCore.style.display = "none";
                     selectedPull.style.display = "none";
                     selectedPush.style.display = "none";
+                    returnButton.style.display = "none";
+                    calenderButton.style.display = "none";
                     break;
                 case "exercise":
                     loginForm.style.display = "none";
@@ -245,6 +283,8 @@
                     selectedCore.style.display = "none";
                     selectedPull.style.display = "none";
                     selectedPush.style.display = "none";
+                    returnButton.style.display = "none";
+                    calenderButton.style.display = "block";
                     break;
                 case "legs":
                     loginForm.style.display = "none";
@@ -254,6 +294,8 @@
                     selectedCore.style.display = "none";
                     selectedPull.style.display = "none";
                     selectedPush.style.display = "none";
+                    returnButton.style.display = "block";
+                    calenderButton.style.display = "block";
                     break;
                 case "core":
                     loginForm.style.display = "none";
@@ -263,6 +305,8 @@
                     selectedCore.style.display = "block";
                     selectedPull.style.display = "none";
                     selectedPush.style.display = "none";
+                    returnButton.style.display = "block";
+                    calenderButton.style.display = "block";
                     break;
                 case "pull":
                     loginForm.style.display = "none";
@@ -272,6 +316,8 @@
                     selectedCore.style.display = "none";
                     selectedPull.style.display = "block";
                     selectedPush.style.display = "none";
+                    returnButton.style.display = "block";
+                    calenderButton.style.display = "block";
                     break;
                 case "push":
                     loginForm.style.display = "none";
@@ -281,6 +327,8 @@
                     selectedCore.style.display = "none";
                     selectedPull.style.display = "none";
                     selectedPush.style.display = "block";
+                    returnButton.style.display = "block";
+                    calenderButton.style.display = "block";
                     break;
             }
 
@@ -345,20 +393,77 @@
         /* Client siden til selectYourExercise */
         const selecteYourExercise = document.getElementById("selecteYourExercise");
         selecteYourExercise.addEventListener("click", async function (e) {
+            e.preventDefault();
 
             const legs = document.getElementById("legsExercises").value;
-          /*   const core = document.getElementById("coreExercises").value;
+            const core = document.getElementById("coreExercises").value;
             const pull = document.getElementById("pullExercises").value;
-            const push = document.getElementById("pushExercises").value; */
+            const push = document.getElementById("pushExercises").value;
 
-            const exercise = { legs, /* core, pull, push */ };
+            const exerciseData = { legs, pull, push, core };
 
-            const respon = await postTo("/exercise/selectYourExercise", exercise);
-           if(respon){
-            toggleForms("legs");
-           } 
+            // Send a POST request to the backend to save the exercise data using the postTo function
+            try {
+                const response = await postTo("/selectYourExercise", exerciseData);
+                if (response) {
+                    toggleForms("legs");
+                } else {
+                    console.error("Failed to select exercises");
+                }
+            } catch (error) {
+                console.error("Error selecting exercises:", error);
+            }
 
-            return false;
+            return false; // Prevent default behavior of the link
+
+            /*   const exercise = { legs, core, pull, push };
+  
+              const respon = await postTo("/exercise/selectYourExercise", exercise);
+              if (respon) {
+                  toggleForms("legs");
+              }
+  
+              return false; */
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Event listener for the return button
+            const returnButton = document.getElementById("returnButton");
+            returnButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                toggleForms("exercise"); // Assuming "exercise" is the form you want to go back to
+            });
+
+            const calenderButton = document.getElementById("calenderButton");
+            returnButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                toggleForms("exercise"); // Assuming "exercise" is the form you want to go back to
+            });
+
+            // Event listeners for exercise buttons
+            const legsButton = document.getElementById("legsButton");
+            legsButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                toggleForms("legs");
+            });
+
+            const coreButton = document.getElementById("coreButton");
+            coreButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                toggleForms("core");
+            });
+
+            const pullButton = document.getElementById("pullButton");
+            pullButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                toggleForms("pull");
+            });
+
+            const pushButton = document.getElementById("pushButton");
+            pushButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                toggleForms("push");
+            });
         });
 
         async function postTo(url, data) {
