@@ -39,36 +39,27 @@ class DBManager {
     } */
 
     async updateUser(user) {
-
         const client = new pg.Client(this.#credentials);
-
-
+    
         try {
             await client.connect();
-            const output = await client.query('Update "public"."User" set "name" = $1, "email" = $2, "password" = $3 where id = $4 "yearOfbirth" = $5 "weight" = $6 "height" = $7;', [user.name, user.email, user.pswHash, user.userId, user.yeareOfirth, user.weight, user.height]);
-
-            // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
-            // Of special intrest is the rows and rowCount properties of this object.
-
-            //TODO Did we update the user?
+            const output = await client.query('UPDATE "public"."User" SET "name" = $1, "email" = $2, "password" = $3, "yearOfBirth" = $5, "weight" = $6, "height" = $7 WHERE "id" = $4;', [user.name, user.email, user.pswHash, user.userId, user.yearOfBirth, user.weight, user.height]);
+    
+            // Check if the user was updated successfully
             if (output.rowCount > 0) {
-                SuperLogger.log("User updated successfully",
-                    SuperLogger.LOGGING_LEVELS.INFO);
+                SuperLogger.log("User updated successfully", SuperLogger.LOGGING_LEVELS.INFO);
             } else {
-                SuperLogger.log("User update failed",
-                    SuperLogger.LOGGING_LEVELS.ERROR);
+                SuperLogger.log("User update failed", SuperLogger.LOGGING_LEVELS.ERROR);
             }
-
-
         } catch (error) {
-            //TODO : Error handling?? Remember that this is a module seperate from your server 
             console.error('Error updating user:', error);
+            SuperLogger.log("Error updating user: " + error.message, SuperLogger.LOGGING_LEVELS.ERROR);
         } finally {
             client.end(); // Always disconnect from the database.
         }
         return user;
-
     }
+    
 
     async deleteUser(user) {
 
@@ -101,13 +92,14 @@ class DBManager {
 
     }
 
+
     async createUser(user) {
 
         const client = new pg.Client(this.#credentials);
 
         try {
             await client.connect();
-            const output = await client.query('INSERT INTO "public"."User"("name", "email", "password", "yearOfBirth", "weight", "height" ) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;', [user.name, user.email, user.pswHash, user.yeareOfirth, user.weight, user.height]);
+            const output = await client.query('INSERT INTO "public"."User"("name", "email", "password", "yearOfBirth", "weight", "height" ) VALUES($1, $2, $3, $4, $5, $6) RETURNING id;', [user.name, user.email, /* hashedPassword, */ user.pswHash, user.yeareOfirth, user.weight, user.height]);
 
             // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
             // Of special intrest is the rows and rowCount properties of this object.
@@ -126,6 +118,11 @@ class DBManager {
         return user;
     }
 
+    /* async hashPassword(password) {
+        const saltRounds = 10; // You can adjust this value based on your requirements
+        return bcrypt.hash(password, saltRounds);
+    }
+ */
     /* For selectYourExercise */
 
     async selectYourExercise(exercise){

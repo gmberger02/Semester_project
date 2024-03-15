@@ -2,6 +2,7 @@ import express from "express";
 import User from "../modules/user.mjs";
 import { HTTPCodes, HTTPMethods } from "../modules/httpConstants.mjs";
 import SuperLogger from "../modules/SuperLogger.mjs";
+import DBManager from '../modules/storageManager.mjs';
 
 
 const USER_API = express.Router();
@@ -18,18 +19,18 @@ SuperLogger.log("A import msg", SuperLogger.LOGGING_LEVELS.CRTICAL);
 
 let user = [];
 
-try{
+try {
     //const data = fs.readFileSync('user.json', 'utf8');
     //users = JSON.parse(data);
-}catch(err){
+} catch (err) {
     console.error("Failed to read users from file, starting with emty array.", err);
 }
 
-function saveUsers(){
-    fs.writeFile('users.json', JSON.stringify(user), 'utf8', (err) =>{
-        if(err){
+function saveUsers() {
+    fs.writeFile('users.json', JSON.stringify(user), 'utf8', (err) => {
+        if (err) {
             console.error("Error writing users to file:", err);
-            return res.status (HTTPCodes.ServerSideErrorrespons.InternalServererror).send("Failed to save user").end();
+            return res.status(HTTPCodes.ServerSideErrorrespons.InternalServererror).send("Failed to save user").end();
         }
     });
 }
@@ -37,10 +38,10 @@ function saveUsers(){
 let lastID = user.length > 0 ? Math.max(...user.map(user => user.userId)) : 0;
 
 
-USER_API.get('/:id',(req, res, next) => {
+USER_API.get('/:id', (req, res, next) => {
 
     SuperLogger.log("Trying to get a user with id " + req.params.userId);
-    SuperLogger.log("a important msg", SuperLogger.LOGGING_LEVELS.DEBUG); 
+    SuperLogger.log("a important msg", SuperLogger.LOGGING_LEVELS.DEBUG);
 
     // Tip: All the information you need to get the id part of the request can be found in the documentation 
     // https://expressjs.com/en/guide/routing.html (Route parameters)
@@ -49,30 +50,31 @@ USER_API.get('/:id',(req, res, next) => {
     // Return user object
 })
 
-USER_API.get('/:id',(req, res, next) => {
+USER_API.get('/:id', (req, res, next) => {
     res.status(HTTPCodes.SuccesfullRespons.Ok).send(user).end();
 
 })
 
-USER_API.post('/createUser', async(req, res) => {
+USER_API.post('/createUser', async (req, res) => {
 
     // This is using javascript object destructuring.
     // Recomend reading up https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
     // https://www.freecodecamp.org/news/javascript-object-destructuring-spread-operator-rest-parameter/    
 
-const { name, email, pswHash, yearOfBirth, weight, height } = req.body;
+    const { name, email, pswHash, yearOfBirth, weight, height } = req.body;
     if (name != "" && email != "" && yearOfBirth != "" && weight != "" && height != "" && pswHash != "") {
-        
+
         const user = new User();
         user.name = name;
         user.email = email;
         user.yearOfBirth = yearOfBirth;
         user.weight = weight;
         user.height = height;
-        user.pswHash = pswHash;///TODO: Do not save passwords.
+        user.pswHash = pswHash;
         console.log(user)
-    
-        if ((await user.exsists()) == false) {
+
+        const exists = await user.exsists()
+        if (exists == false) {
             await user.save();
             res.status(HTTPCodes.SuccesfullRespons.Ok).send("User was created").end();
         } else {
@@ -82,8 +84,6 @@ const { name, email, pswHash, yearOfBirth, weight, height } = req.body;
     } else {
         res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("Mangler data felt").end();
     }
-
-    ///TODO: Does the user exist?
     let exists = false;
 
     if (!exists) {
@@ -95,41 +95,52 @@ const { name, email, pswHash, yearOfBirth, weight, height } = req.body;
 
 });
 
-USER_API.put('/:id', (req, res) => {
-    /// TODO: Edit user
-    const userId = parseInt(req.params.id, 10);
-    const { name, email, password } = req.body;
+USER_API.put('/:id', async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id, 10);
 
-    const userIndex = user.findIndex(user => user.id === userId);
+        const { name, email, password, yearOfBirth, weight, height } = req.body;
 
-    if (userIndex !== -1) {
+        // Kobler til databsen
+        const client = new pg.Client(DBManager.credentials);
+        await client.connect();
 
-        user[userIndex].name = name !== undefined ? name : user[userIndex].name;
-        user[userIndex].email = email !== undefined ? email : user[userIndex].email;
+        // oppdateter user informasjonen i databasen
+        const query = 'UPDATE "public"."User" SET "name" = $1, "email" = $2, "password" = $3, "yearOfBirth" = $4, "weight" = $5, "height" = $6 WHERE "id" = $7';
+        const values = [name, email, password, yearOfBirth, weight, height, userId];
+        const result = await client.query(query, values);
 
-        user.save();
-
-        res.status(HTTPCodes.SuccesfullRespons.Ok).send("User updated successfully!").end();    
-    }else{
-        res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("User not found!").end();
+        // skjekker om oppdatetering var successful
+        if (result.rowCount > 0) {
+            SuperLogger.log("User updated successfully", SuperLogger.LOGGING_LEVELS.INFO);
+            res.status(HTTPCodes.SuccesfullRespons.Ok).send("User updated successfully!").end();
+        } else {
+            SuperLogger.log("User update failed", SuperLogger.LOGGING_LEVELS.ERROR);
+            res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("User not found!").end();
+        }
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(HTTPCodes.ServerSideErrorrespons.InternalServererror).send("Failed to update user").end();
+    } finally {
+        client.end(); // kobler fra databasen
     }
 });
 
 USER_API.delete('/:id', (req, res) => {
     /// TODO: Delete user.
-   const userId = parseInt(req.params.id, 10);
+    const userId = parseInt(req.params.id, 10);
 
-   const userIndex = user.findIndex(user => user.id === userId);
+    const userIndex = user.findIndex(user => user.id === userId);
 
-   if (userIndex !== -1) {
-    user.splice(userIndex, 1);
+    if (userIndex !== -1) {
+        user.splice(userIndex, 1);
 
-    user.save();
+        user.save();
 
-    res.status(HTTPCodes.SuccesfullRespons.Ok).send("User deleted successfully!").end();
-   }else{
-    res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("User not found!").end();
-   }
+        res.status(HTTPCodes.SuccesfullRespons.Ok).send("User deleted successfully!").end();
+    } else {
+        res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("User not found!").end();
+    }
 });
 
 USER_API.post('/login', async (req, res, next) => {

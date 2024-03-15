@@ -25,6 +25,18 @@ body {
     background: #ffffff;
 }
 
+#loginMessage{
+    margin-top: 20px;
+    text-align: center;
+    color: var(--color-error);
+}
+
+#createUserMessage{
+    margin-top: 20px;
+    text-align: center;
+    color: var(--color-error);
+}
+
 .form--hidden {
     display: none;
 }

@@ -1,4 +1,5 @@
 import DBManager from "./storageManager.mjs"
+
 class User {
 
     constructor() {
@@ -11,16 +12,14 @@ class User {
         this.height;
     }
 
-    async save() {
-        //TODO: What happens if the DBManager fails to complete its task?
-    // We know that if a user object dos not have the ID, then it cant be in the DB.
+    async save(){
 
-    if (this.userId == null) {
+    if(this.userId == null) {
         return await DBManager.createUser(this);
-    }else{
+    } else {
         return await DBManager.updateUser(this);
-    } 
     }
+}
 
     async delete() {
         //TODO: What happens if the DBManager fails to complete its task?
@@ -28,6 +27,7 @@ class User {
     }
 
     async exsists(){
+
         let user = await DBManager.login(this.email, this.pswHash);
         if(user){
             this.userId = user.id;
@@ -35,9 +35,17 @@ class User {
             this.yearOfBirth = user.yearOfBirth;
             this.weight = user.weight;
             this.height = user.height;
+            return true;
         }
-        return user;
+        return false
     }
+
+    
+
+
 }
+
+
+
 
 export default User;

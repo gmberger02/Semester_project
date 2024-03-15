@@ -8,9 +8,10 @@
     <title>My app</title>
 
 </head>
-<!-- Dette lager login form-->
+
 
 <body>
+    <!-- Dette lager login form-->
     <div class="container" id="divLogin">
 
         <form class="form">
@@ -28,13 +29,10 @@
                     <button class="form__button" type="button">Submit</button>
                 </a>
             </p>
-            <p class="form__text">
-                <a href="#" class="form__link">Forgot your password?</a>
-            </p>
             <p class="form__text" id="continueButton">
                 <a class="form__link" href="./" id="createAccountLink">Don't have an account? Create account</a>
             </p>
-            <div id="loginMessage" style="display: none;">
+            <div class="loginMessage" id="loginMessage" style="display: none;">
                 <span>"Brukernavn eller passord er feil"</span>
             </div>
         </form>
@@ -77,6 +75,9 @@
                     <button class="form__button" type="button">Submit</button>
                 </a>
             </p>
+        <div class="createUserMessage" id="createUserMessage" style="display: none;">
+            <span>Kunne ikke opprette ny bruker. Brukeren finnes allerede</span>
+        </div>
 
             <p class="form__text">
                 <a class="form__link" href="./" id="linkLogin">Already have an account? Sign in</a>
@@ -350,7 +351,7 @@
         createUserButton.addEventListener("click", async function (e) {
 
             e.preventDefault();
-
+    
             const name = document.getElementById("signupUsername").value;
             const email = document.getElementById("email").value;
             const pswHash = document.getElementById("pswHash").value;
@@ -359,13 +360,21 @@
             const height = document.getElementById("height").value;
 
             const user = { name, email, pswHash, yearOfBirth, weight, height };
+            loginMessage = document.getElementById("createUserMessage");
+            loginMessage.style.display = "none";
 
             const respon = await postTo("/user/createUser", user);
+            if (respon) {
+                toggleForms("exercise");
+            } else {
+                loginMessage = document.getElementById("createUserMessage");
+                loginMessage.style.display = "block";
+            }
 
             return false;
         });
 
-        /* Client siden til login */
+        /* Client siden til login */ 
         /* legger til en eventlytter til loginButton lytter etter klikk */
         const loginButton = document.getElementById("loginButton");
         loginButton.addEventListener("click", async function (e) {
