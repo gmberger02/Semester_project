@@ -2,7 +2,7 @@ import 'dotenv/config'
 import express from 'express' // Express is installed using npm
 import USER_API from './routes/usersRoute.mjs'; // This is where we have defined the API for working with users.
 
-import SuperLogger from './modules/SuperLogger.mjs';
+import SuperLogger from './modules/superLogger.mjs';
 import EXERCISE_API from './routes/exerciseRoute.mjs';
 
 
@@ -65,14 +65,6 @@ server.post("/login", (req, res, next) => {
     next();
 });
 
-server.post("selectYourExercise", (req,res, next)=>{
-    console.log(req.body);
-    if(DBManager.selectyourexercise(req.body.legs, req.body.core, req.body.pull, req.body.push) === true){
-        res.status(200).send(JSON.stringify({msg: "Exercise was saved"}));
-    }else{
-    }
-    next(); 
-});
 
 // A get request handler example)
 server.get("/", (req, res, next) => {

@@ -1,7 +1,7 @@
 import express from "express";
 import User from "../modules/user.mjs";
 import { HTTPCodes, HTTPMethods } from "../modules/httpConstants.mjs";
-import SuperLogger from "../modules/SuperLogger.mjs";
+import SuperLogger from "../modules/superLogger.mjs";
 import DBManager from '../modules/storageManager.mjs';
 
 

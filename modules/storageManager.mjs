@@ -1,6 +1,5 @@
 import pg from "pg"
-import SuperLogger from "./SuperLogger.mjs"
-import { HTTPCodes } from "./httpConstants.mjs";
+import SuperLogger from "./superLogger.mjs"
 
 //We are using an enviorment varible to get the db credential
 if (process.env.DB_CONNECTIONSTRING == undefined) {
@@ -175,7 +174,7 @@ class DBManager {
 
     }
 }
-const connectionString =process.env.ENVIORNMENT == "local" ? process.env.DB_CONNECTIONSTRING : process.env.DB_CONNECTIONSTRING_PROD;
+let connectionString = process.env.ENVIORNMENT == "local" ? process.env.DB_CONNECTIONSTRING : process.env.DB_CONNECTIONSTRING_PROD;
 
 if(connectionString == undefined){
     throw("You forgot the db connection string")
