@@ -24,7 +24,7 @@
                 <input type="password" class="form__input" id="loginPassword" autofocus placeholder="Password">
                 <div class="form__input-error-message"></div>
             </div>
-            <p class="form" id="continueButton">
+            <p class="form">
                 <a class="form__link" href="./" id="loginButton">
                     <button class="form__button" type="button">Submit</button>
                 </a>
@@ -70,8 +70,8 @@
 
 
             <!-- Denne lager continue knappen som linker select exercise -->
-            <p class="form" id="createUserButton">
-                <a class="form__link" href="./">
+            <p class="form">
+                <a class="form__link" href="./" id="createUserButton">
                     <button class="form__button" type="button">Submit</button>
                 </a>
             </p>
@@ -365,7 +365,7 @@
 
             const respon = await postTo("/user/createUser", user);
             if (respon) {
-                toggleForms("exercise");
+                toggleForms("login");
             } else {
                 loginMessage = document.getElementById("createUserMessage");
                 loginMessage.style.display = "block";
@@ -413,7 +413,7 @@
 
             // Send a POST request to the backend to save the exercise data using the postTo function
             try {
-                const response = await postTo("/selectYourExercise", exerciseData);
+                const response = await postTo("exercise/selectYourExercise", exerciseData);
                 if (response) {
                     toggleForms("legs");
                 } else {

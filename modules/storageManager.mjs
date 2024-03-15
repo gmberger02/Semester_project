@@ -130,7 +130,7 @@ class DBManager {
 
         try {
             await client.connect();
-            const output = await client.query('INSERT INTO "public"."Exercise"("legs", "pull", "push", "core" ) VALUES($1, $2, $3, $4) RETURNING id;', [exercise.legs, exercise.pull, exercise.push, exercise.core]);
+            const output = await client.query('INSERT INTO "public"."Exercise"("legs", "pull", "push", "core" ) VALUES($1, $2, $3, $4) RETURNING ExerciseId;', [exercise.legs, exercise.pull, exercise.push, exercise.core]);
 
             // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
             // Of special intrest is the rows and rowCount properties of this object.
@@ -155,7 +155,7 @@ class DBManager {
 
         try {
             await client.connect();
-            const output = await client.query('Update "public"."Exercise" set "legs" = $1, "pull" = $2, "push" = $3 where id = $4 "core" = $5 ', [exercise.legs, exercise.pull, exercise.push, exercise.exerciseIdId, exercise.core]);
+            const output = await client.query('UPDATE "public"."Exercise" set "legs" = $1, "pull" = $2, "push" = $3 WHERE ExerciseId = $4 "core" = $5 ', [exercise.legs, exercise.pull, exercise.push, exercise.exerciseId, exercise.core]);
 
             // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
             // Of special intrest is the rows and rowCount properties of this object.
@@ -175,4 +175,10 @@ class DBManager {
 
     }
 }
-export default new DBManager(process.env.DB_CONNECTIONSTRING); 
+String = process.env.ENVIORMENT == "local" ? process.env.DB_CONNECTIONSTRING : process.env.DB_CONNECTIONSTRING_PROD;
+
+if(connectionString == undefined){
+    throw("You forgot the db connection string")
+}
+
+export default new DBManager(connectionString); 

@@ -26,17 +26,7 @@ try {
     console.error("Failed to read users from file, starting with emty array.", err);
 }
 
-function saveUsers() {
-    fs.writeFile('users.json', JSON.stringify(user), 'utf8', (err) => {
-        if (err) {
-            console.error("Error writing users to file:", err);
-            return res.status(HTTPCodes.ServerSideErrorrespons.InternalServererror).send("Failed to save user").end();
-        }
-    });
-}
-
 let lastID = user.length > 0 ? Math.max(...user.map(user => user.userId)) : 0;
-
 
 USER_API.get('/:id', (req, res, next) => {
 

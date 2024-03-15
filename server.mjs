@@ -3,6 +3,7 @@ import express from 'express' // Express is installed using npm
 import USER_API from './routes/usersRoute.mjs'; // This is where we have defined the API for working with users.
 
 import SuperLogger from './modules/SuperLogger.mjs';
+import EXERCISE_API from './routes/exerciseRoute.mjs';
 
 
 //#region  Kun for rask testing, SLETT NÅR FERDIG Å TESTE
@@ -42,6 +43,7 @@ server.use(express.static('public'));
 
 // Telling the server to use the USER_API (all urls that uses this code will have to have the /user after the base address)
 server.use("/user", USER_API);
+server.use("/exercise", EXERCISE_API)
 
 server.post("/createUser", (req,res, next) => {
     console.log(req.body);
@@ -61,6 +63,15 @@ server.post("/login", (req, res, next) => {
         res.status(404).send(JSON.stringify({msg: "Password or email not correct"}));
     }
     next();
+});
+
+server.post("selectYourExercise", (req,res, next)=>{
+    console.log(req.body);
+    if(DBManager.selectyourexercise(req.body.legs, req.body.core, req.body.pull, req.body.push) === true){
+        res.status(200).send(JSON.stringify({msg: "Exercise was saved"}));
+    }else{
+    }
+    next(); 
 });
 
 // A get request handler example)
