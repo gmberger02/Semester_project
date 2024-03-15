@@ -19,6 +19,5 @@ if (this.exerciseId == null) {
     return await DBManager.updateYourExercise(this);
 } 
 }
-
 }
 export default Exercise;
