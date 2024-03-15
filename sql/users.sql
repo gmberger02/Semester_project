@@ -3,7 +3,7 @@ CREATE TABLE "Users" (
     email text,
     name text,
     password text,
-    "yearOfBirth" date,
+    "yearOfBirth" numeric,
     weight double precision,
     height double precision
 );

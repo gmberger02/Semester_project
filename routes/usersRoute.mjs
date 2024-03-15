@@ -66,6 +66,8 @@ USER_API.post('/createUser', async (req, res) => {
         const exists = await user.exsists()
         if (exists == false) {
             await user.save();
+            console.log("hei",user);
+
             res.status(HTTPCodes.SuccesfullRespons.Ok).send("User was created").end();
         } else {
             res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).end();

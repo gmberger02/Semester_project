@@ -1,13 +1,6 @@
 import pg from "pg"
 import SuperLogger from "./superLogger.mjs"
 
-//We are using an enviorment varible to get the db credential
-if (process.env.DB_CONNECTIONSTRING == undefined) {
-    throw ("You forgot the db connection string");
-}
-
-// TODO: is the structure / design of the DBManager as good as it could be?
-
 class DBManager {
     #credentials = {};
 
