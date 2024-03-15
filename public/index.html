@@ -363,7 +363,7 @@
             loginMessage = document.getElementById("createUserMessage");
             loginMessage.style.display = "none";
 
-            const respon = await postTo("/user/createUser", user);
+            const respon = postTo("/user/createUser", user)
             if (respon) {
                 toggleForms("login");
             } else {
