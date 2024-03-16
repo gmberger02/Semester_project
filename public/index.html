@@ -112,6 +112,12 @@
         </a>
     </div>
 
+    <!-- Delete knapp -->
+    <button id="deleteUserButton">Delete Account</button>
+
+    <!-- Logout button  -->
+    <button id="logoutButton">Logout</button>
+
     <!-- Dette lager alle exercise knappene -->
     <div class="container" id="selecteYourExercise" style="display: block; ">
         <div class="form form_exercise" id="selectExerciseLegs">
@@ -252,6 +258,8 @@
             const selectedPush = document.getElementById("selectedPush");
             const returnButton = document.getElementById("returnButton");
             const calenderButton = document.getElementById("calenderButton");
+            const deleteUserButton = document.getElementById("deleteUserButton");
+            const logoutButton = document.getElementById("logoutButton");
 
             switch (formeName) {
                 case "login":
@@ -264,6 +272,8 @@
                     selectedPush.style.display = "none";
                     returnButton.style.display = "none";
                     calenderButton.style.display = "none";
+                    deleteUserButton.style.display = "none";
+                    logoutButton.style.display = "none";
                     break;
                 case "createUser":
                     loginForm.style.display = "none";
@@ -275,6 +285,8 @@
                     selectedPush.style.display = "none";
                     returnButton.style.display = "none";
                     calenderButton.style.display = "none";
+                    deleteUserButton.style.display = "none";
+                    logoutButton.style.display = "none";
                     break;
                 case "exercise":
                     loginForm.style.display = "none";
@@ -286,6 +298,8 @@
                     selectedPush.style.display = "none";
                     returnButton.style.display = "none";
                     calenderButton.style.display = "block";
+                    deleteUserButton.style.display = "block";
+                    logoutButton.style.display = "block";
                     break;
                 case "legs":
                     loginForm.style.display = "none";
@@ -297,6 +311,8 @@
                     selectedPush.style.display = "none";
                     returnButton.style.display = "block";
                     calenderButton.style.display = "block";
+                    deleteUserButton.style.display = "block";
+                    logoutButton.style.display = "block";
                     break;
                 case "core":
                     loginForm.style.display = "none";
@@ -308,6 +324,8 @@
                     selectedPush.style.display = "none";
                     returnButton.style.display = "block";
                     calenderButton.style.display = "block";
+                    deleteUserButton.style.display = "block";
+                    logoutButton.style.display = "block";
                     break;
                 case "pull":
                     loginForm.style.display = "none";
@@ -319,6 +337,8 @@
                     selectedPush.style.display = "none";
                     returnButton.style.display = "block";
                     calenderButton.style.display = "block";
+                    deleteUserButton.style.display = "block";
+                    logoutButton.style.display = "block";
                     break;
                 case "push":
                     loginForm.style.display = "none";
@@ -330,6 +350,8 @@
                     selectedPush.style.display = "block";
                     returnButton.style.display = "block";
                     calenderButton.style.display = "block";
+                    deleteUserButton.style.display = "block";
+                    logoutButton.style.display = "block";
                     break;
             }
 
@@ -425,15 +447,48 @@
 
             return false; // Prevent default behavior of the link
 
-            /*   const exercise = { legs, core, pull, push };
-  
-              const respon = await postTo("/exercise/selectYourExercise", exercise);
-              if (respon) {
-                  toggleForms("legs");
-              }
-  
-              return false; */
         });
+
+        const deleteUserButton = document.getElementById("deleteUserButton");
+deleteUserButton.addEventListener("click", async function() {
+    const userId = getUserId(); // Implement a function to get the user ID
+
+    // Send a DELETE request to the backend
+    try {
+        const response = await fetch(`/user/${userId}`, { method: "DELETE" });
+
+        if (response.ok) {
+            alert("Your account has been deleted successfully.");
+            // Optionally, redirect the user to a different page or perform any other action
+        } else {
+            const errorMessage = await response.text();
+            alert(`Failed to delete account: ${errorMessage}`);
+        }
+    } catch (error) {
+        console.error("Error deleting account:", error);
+        alert("Failed to delete account. Please try again later.");
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Get the logout button element
+    const logoutButton = document.getElementById('logoutButton');
+
+    // Add a click event listener to the logout button
+    logoutButton.addEventListener('click', async () => {
+        try {
+            // Send a POST request to the logout route
+            const response = await postTo('/user/logout', {});
+
+            // Redirect to the login page upon successful logout
+            toggleForms("login");
+        } catch (error) {
+            // Handle errors (optional)
+            console.error('Error during logout:', error.message);
+            // Optionally, display an error message to the user
+        }
+    });
+});
 
         document.addEventListener("DOMContentLoaded", function () {
             // Event listener for the return button
@@ -484,13 +539,27 @@
                 body: JSON.stringify(data),
             };
 
-
             const respon = await fetch(url, header);
             if (respon.status === 200) {
                 return await respon.json();
             }
             return null;
 
+        }
+
+        async function putTo(url, data) {
+            const header = {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+            const respon = await fetch(url, header);
+            if (respon.status === 200) {
+                return await respon.json();
+            }
+            return null;
         }
 
     </script>

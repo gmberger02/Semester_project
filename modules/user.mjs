@@ -3,7 +3,7 @@ import DBManager from "./storageManager.mjs"
 class User {
 
     constructor() {
-        this.userId // vente med denne til databaser
+        this.userId 
         this.email;
         this.pswHash;
         this.name;
@@ -22,7 +22,6 @@ class User {
 }
 
     async delete() {
-        //TODO: What happens if the DBManager fails to complete its task?
         await DBManager.deleteUser(this); 
     }
 

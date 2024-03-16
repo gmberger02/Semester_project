@@ -20,8 +20,8 @@ SuperLogger.log("A import msg", SuperLogger.LOGGING_LEVELS.CRTICAL);
 let user = [];
 
 try {
-    //const data = fs.readFileSync('user.json', 'utf8');
-    //users = JSON.parse(data);
+    const data = fs.readFileSync('user.json', 'utf8');
+    users = JSON.parse(data);
 } catch (err) {
     console.error("Failed to read users from file, starting with emty array.", err);
 }
@@ -32,12 +32,6 @@ USER_API.get('/:id', (req, res, next) => {
 
     SuperLogger.log("Trying to get a user with id " + req.params.userId);
     SuperLogger.log("a important msg", SuperLogger.LOGGING_LEVELS.DEBUG);
-
-    // Tip: All the information you need to get the id part of the request can be found in the documentation 
-    // https://expressjs.com/en/guide/routing.html (Route parameters)
-
-    /// TODO: 
-    // Return user object
 })
 
 USER_API.get('/:id', (req, res, next) => {
@@ -48,9 +42,6 @@ USER_API.get('/:id', (req, res, next) => {
 USER_API.post('/createUser', async (req, res) => {
 
     // This is using javascript object destructuring.
-    // Recomend reading up https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
-    // https://www.freecodecamp.org/news/javascript-object-destructuring-spread-operator-rest-parameter/    
-
     const { name, email, pswHash, yearOfBirth, weight, height } = req.body;
     if (name != "" && email != "" && yearOfBirth != "" && weight != "" && height != "" && pswHash != "") {
 
@@ -88,7 +79,7 @@ USER_API.post('/createUser', async (req, res) => {
 
 USER_API.put('/:id', async (req, res) => {
     try {
-        const userId = parseInt(req.params.id, 10);
+        const userId = 8
 
         const { name, email, password, yearOfBirth, weight, height } = req.body;
 
@@ -100,6 +91,8 @@ USER_API.put('/:id', async (req, res) => {
         const query = 'UPDATE "public"."User" SET "name" = $1, "email" = $2, "password" = $3, "yearOfBirth" = $4, "weight" = $5, "height" = $6 WHERE "id" = $7';
         const values = [name, email, password, yearOfBirth, weight, height, userId];
         const result = await client.query(query, values);
+
+        console.log(result)
 
         // skjekker om oppdatetering var successful
         if (result.rowCount > 0) {
@@ -117,20 +110,34 @@ USER_API.put('/:id', async (req, res) => {
     }
 });
 
-USER_API.delete('/:id', (req, res) => {
-    /// TODO: Delete user.
+USER_API.post('/logout', async (req, res) => {
+    try {
+        // Assuming you're using sessions and you have a session.destroy() method available
+        await req.session.destroy();
+        res.clearCookie('session-id'); // Clear the session cookie
+        res.redirect('/login'); // Redirect to login page after logout
+    } catch (error) {
+        console.error('Error destroying session:', error);
+        res.status(HTTPCodes.ServerErrorRespons.InternalServerError).send('Failed to logout');
+    }
+});
+
+USER_API.delete('/:id', async (req, res) => {
     const userId = parseInt(req.params.id, 10);
 
-    const userIndex = user.findIndex(user => user.id === userId);
+    // Assuming you have a function to retrieve user details from the database
+    const user = await DBManager.getUserById(userId);
 
-    if (userIndex !== -1) {
-        user.splice(userIndex, 1);
-
-        user.save();
-
-        res.status(HTTPCodes.SuccesfullRespons.Ok).send("User deleted successfully!").end();
-    } else {
-        res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send("User not found!").end();
+    if (!user) {
+        res.status(HTTPCodes.ClientSideErrorRespons.BadRequest).send('User not found!').end();
+        return;
+    }
+    try {
+        await user.delete();
+        res.status(HTTPCodes.SuccesfullRespons.Ok).send('User deleted successfully!').end();
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(HTTPCodes.ServerErrorRespons.InternalServerError).send('Failed to delete user').end();
     }
 });
 
@@ -144,7 +151,6 @@ USER_API.post('/login', async (req, res, next) => {
     if (email != "" && pswHash != "") {
         let user = new User();
         user.email = email;
-        ///TODO: Do not save passwords.
         user.pswHash = pswHash;
         user = await user.exsists();
         if(user){

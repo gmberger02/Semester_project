@@ -5,27 +5,6 @@ import USER_API from './routes/usersRoute.mjs'; // This is where we have defined
 import SuperLogger from './modules/superLogger.mjs';
 import EXERCISE_API from './routes/exerciseRoute.mjs';
 
-
-//#region  Kun for rask testing, SLETT NÅR FERDIG Å TESTE
-
-
-   /*  import DBManager from "./modules/storageManager.mjs"
-    await DBManager.test();
-
-    import User from "./modules/user.mjs";
-    let user = new User();
-    user.name = "Test"
-    user.email = "email";
-    user.pswHash = "psw";
-    user.yearOfBirth = 2006;
-    user.weight = 67;
-    user.height = 178;
-    
-    await user.save(); */
-    
-//#endregion
-
-
 // Creating an instance of the server
 const server = express();
 // Selecting a port for the server to use.

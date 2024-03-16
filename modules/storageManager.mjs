@@ -22,20 +22,13 @@ class DBManager {
         } 
         return null;
     }
-/* HUSK Å FJERNE TEST FØR INNLEVREING  */
-   /*  async test() {
-        const client = new pg.Client(this.#credentials);
-        await client.connect();
-        await client.end();
-        console.log("DATABASE TEST VIRKET");
-    } */
 
     async updateUser(user) {
         const client = new pg.Client(this.#credentials);
     
         try {
             await client.connect();
-            const output = await client.query('UPDATE "public"."User" SET "name" = $1, "email" = $2, "password" = $3, "yearOfBirth" = $5, "weight" = $6, "height" = $7 WHERE "id" = $4;', [user.name, user.email, user.pswHash, user.userId, user.yearOfBirth, user.weight, user.height]);
+            const output = await client.query('UPDATE "public"."User" SET "name" = $1, "email" = $2, "password" = $3, "yearOfBirth" = $4, "weight" = $5, "height" = $6 WHERE "id" = $7;', [user.name, user.email, user.pswHash, user.yearOfBirth, user.weight, user.height,user.userId]);
     
             // Check if the user was updated successfully
             if (output.rowCount > 0) {
@@ -51,7 +44,10 @@ class DBManager {
         }
         return user;
     }
-    
+ async getUserId(req) {
+        // Extract the user ID from request parameters
+        return parseInt(req.params.id, 10);
+    }
 
     async deleteUser(user) {
 
@@ -59,12 +55,12 @@ class DBManager {
 
         try {
             await client.connect();
-            const output = await client.query('Delete from "public"."Users" where id = $1;', [user.userId]);
+            const userId = this.getUserId(req);
+            const output = await client.query('Delete from "public"."Users" where id = $1;', [userId]);
 
             // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
             // Of special intrest is the rows and rowCount properties of this object.
 
-            //TODO: Did the user get deleted?
             if (output.rowCount > 0) {
                 SuperLogger.log("User deleted successfully",
                     SuperLogger.LOGGING_LEVELS.INFO);
@@ -73,7 +69,6 @@ class DBManager {
                     SuperLogger.LOGGING_LEVELS.ERROR);
             }
         } catch (error) {
-            //TODO : Error handling?? Remember that this is a module seperate from you server
             console.error('Error deleting user:', error);
 
         } finally {
@@ -102,7 +97,6 @@ class DBManager {
             }
         } catch (error) {
             console.error("error creating user", error);
-            //TODO : Error handling?? Remember that this is a module seperate from your server
         } finally {
             client.end(); // Always disconnect from the database
         }
@@ -110,11 +104,6 @@ class DBManager {
         return user;
     }
 
-    /* async hashPassword(password) {
-        const saltRounds = 10; // You can adjust this value based on your requirements
-        return bcrypt.hash(password, saltRounds);
-    }
- */
     /* For selectYourExercise */
 
     async selectYourExercise(exercise){
@@ -133,7 +122,6 @@ class DBManager {
             }
         } catch (error) {
             console.error("error creating user", error);
-            //TODO : Error handling?? Remember that this is a module seperate from your server
         } finally {
             client.end(); // Always disconnect from the database
         }
@@ -152,13 +140,11 @@ class DBManager {
             // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
             // Of special intrest is the rows and rowCount properties of this object.
 
-            //TODO Did we update the user?
             if (output.rowCount > 0) {
                 
             }
 
         } catch (error) {
-            //TODO : Error handling?? Remember that this is a module seperate from your server 
             console.error('Error updating user:', error);
         } finally {
             client.end(); // Always disconnect from the database.
